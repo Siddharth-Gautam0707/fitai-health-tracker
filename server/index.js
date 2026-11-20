@@ -10,15 +10,19 @@ const mongoose = require('mongoose');
 const app = express();
 
 // Middleware
+//accepts only request coming from process.env.CLIENT_URL or vite default http://localhost:5173
 app.use(cors({ origin: [process.env.CLIENT_URL || 'http://localhost:5173'], credentials: true }));
+//builtin parse middlewares - parse incoming http requests with parsed JSON payloads
 app.use(express.json());
 
 // Test route
+//serves as basic basic health-check endpoint to verify if the server is up and responding?
 app.get('/', (req, res) => {
   res.json({ message: 'Health Tracker API is running' });
 });
 
 // Routes
+//Imports router modules and binds each one to a specific prefix path using app.use()
 const authRouter = require('./routes/auth.routes');
 app.use('/api/auth', authRouter);
 
@@ -41,6 +45,7 @@ const aiRouter = require('./routes/ai.routes');
 app.use('/api/ai', aiRouter);
 
 // 404 Handler (for unknown routes)
+//Catches any request that did not match any of the preceding routes.
 app.use((req, res) => {
   res.status(404).json({ message: `Route ${req.method} ${req.url} not found` });
 });

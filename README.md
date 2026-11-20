@@ -156,22 +156,48 @@ fitai-health-tracker/
 ## ⚙️ Environment Configuration
 
 ### Backend (`server/.env`)
-Copy `server/.env.example` to `server/.env` and supply your credentials:
+Create `server/.env` based on `server/.env.example` and supply your credentials:
 
 ```env
 PORT=5000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/fitai
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.xxxxxxx.mongodb.net/fitai?retryWrites=true&w=majority
 JWT_SECRET=your_super_secret_jwt_key_min_32_chars
 GEMINI_API_KEY=your_google_gemini_api_key
 CLIENT_URL=http://localhost:5173
 ```
 
+> [!TIP]
+> - **MongoDB URI**: Make sure to replace `<username>` and `<password>` with your actual database user credentials (without angle brackets `< >`) and include your database name (e.g., `/fitai`).
+> - **Gemini API Key**: Obtain a free API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+> - **JWT Secret**: Any secure, random 32+ character string used to sign auth tokens.
+
 ### Frontend (`client/.env`)
-Copy `client/.env.example` to `client/.env`:
+Create `client/.env` based on `client/.env.example`:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
+
+---
+
+## ☁️ Deployment Guide (Render & Vercel)
+
+### 1. Backend on Render
+1. Create a new **Web Service** on Render connected to this repository.
+2. Set Root Directory to `server`.
+3. Configure the following environment variables in the Render dashboard:
+   - `PORT`: `5000`
+   - `MONGODB_URI`: Your MongoDB Atlas connection string.
+   - `JWT_SECRET`: Your production JWT secret string.
+   - `GEMINI_API_KEY`: Your Google Gemini API key.
+   - `CLIENT_URL`: The production URL of your Vercel frontend (e.g. `https://client-flame-alpha-29.vercel.app`).
+
+### 2. Frontend on Vercel
+1. Create a new project on Vercel connected to this repository.
+2. Set Root Directory to `client`.
+3. Add the environment variable:
+   - `VITE_API_URL`: Your Render backend service URL with `/api` path (e.g. `https://health-tracker-backend-5mk8.onrender.com/api`).
+4. Deploy!
 
 ---
 
