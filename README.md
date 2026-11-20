@@ -12,13 +12,15 @@
 
 ---
 
-## 🌐 Live Deployments
+## 🌐 Deployment Status
 
-| Service | Environment | URL |
+Currently running locally. Follow the [Deployment Guide](#-deployment-guide-render--vercel) below to deploy your own live version on Render and Vercel.
+
+| Service | Environment | Status / URL |
 | :--- | :--- | :--- |
-| **Frontend Application** | Vercel | [https://client-flame-alpha-29.vercel.app](https://client-flame-alpha-29.vercel.app) |
-| **Backend REST API** | Render | [https://health-tracker-backend-5mk8.onrender.com](https://health-tracker-backend-5mk8.onrender.com) |
-| **Database** | MongoDB Atlas | Cloud Hosted (M0 Tier) |
+| **Frontend Application** | Localhost / Vercel | `http://localhost:5173` |
+| **Backend REST API** | Localhost / Render | `http://localhost:5000` |
+| **Database** | MongoDB Atlas | Connected |
 
 ---
 
