@@ -192,13 +192,13 @@ VITE_API_URL=http://localhost:5000/api
    - `MONGODB_URI`: Your MongoDB Atlas connection string.
    - `JWT_SECRET`: Your production JWT secret string.
    - `GEMINI_API_KEY`: Your Google Gemini API key.
-   - `CLIENT_URL`: The production URL of your Vercel frontend (e.g. `https://client-flame-alpha-29.vercel.app`).
+   - `CLIENT_URL`: The production URL of your Vercel frontend (e.g. `https://fitai-tracker.vercel.app`).
 
 ### 2. Frontend on Vercel
 1. Create a new project on Vercel connected to this repository.
 2. Set Root Directory to `client`.
 3. Add the environment variable:
-   - `VITE_API_URL`: Your Render backend service URL with `/api` path (e.g. `https://health-tracker-backend-5mk8.onrender.com/api`).
+   - `VITE_API_URL`: Your Render backend service URL with `/api` path (e.g. `https://fitai-backend.onrender.com/api`).
 4. Deploy!
 
 ---
