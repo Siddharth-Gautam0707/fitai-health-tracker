@@ -10,21 +10,33 @@ const router = express.Router();
 // GET / - Dashboard Today's and Weekly Stats + Streak
 router.get('/', authMiddleware, async (req, res) => {
   try {
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+    let baseDate;
+    if (req.query.date && typeof req.query.date === 'string' && req.query.date.includes('-')) {
+      const parts = req.query.date.split('-').map(Number);
+      baseDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2], 12, 0, 0));
+    } else {
+      baseDate = new Date();
+    }
 
-    const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999);
+    const startOfToday = new Date(baseDate);
+    startOfToday.setUTCHours(0, 0, 0, 0);
+
+    const endOfToday = new Date(baseDate);
+    endOfToday.setUTCHours(23, 59, 59, 999);
 
     const startOfWeekly = new Date(startOfToday);
-    startOfWeekly.setDate(startOfToday.getDate() - 6);
+    startOfWeekly.setUTCDate(startOfWeekly.getUTCDate() - 6);
+
+    // Extra buffer to ensure no timezone edge-cases are missed
+    const queryEnd = new Date(endOfToday);
+    queryEnd.setUTCDate(queryEnd.getUTCDate() + 1);
 
     // Fetch all needed data in parallel
     const [weeklyMeals, weeklyWorkouts, waterLogs, sleepLogs, allWorkouts] = await Promise.all([
-      Meal.find({ userId: req.userId, date: { $gte: startOfWeekly, $lte: endOfToday } }),
-      Workout.find({ userId: req.userId, date: { $gte: startOfWeekly, $lte: endOfToday } }),
-      Water.find({ userId: req.userId, date: { $gte: startOfToday, $lte: endOfToday } }),
-      Sleep.find({ userId: req.userId, date: { $gte: startOfToday, $lte: endOfToday } }),
+      Meal.find({ userId: req.userId, date: { $gte: startOfWeekly, $lte: queryEnd } }),
+      Workout.find({ userId: req.userId, date: { $gte: startOfWeekly, $lte: queryEnd } }),
+      Water.find({ userId: req.userId, date: { $gte: startOfToday, $lte: queryEnd } }),
+      Sleep.find({ userId: req.userId, date: { $gte: startOfToday, $lte: queryEnd } }),
       Workout.find({ userId: req.userId }).sort({ date: -1 })
     ]);
 
@@ -67,13 +79,13 @@ router.get('/', authMiddleware, async (req, res) => {
     const days = [];
     for (let i = 6; i >= 0; i--) {
       const dStart = new Date(startOfToday);
-      dStart.setDate(startOfToday.getDate() - i);
+      dStart.setUTCDate(startOfToday.getUTCDate() - i);
       const dEnd = new Date(dStart);
-      dEnd.setHours(23, 59, 59, 999);
+      dEnd.setUTCHours(23, 59, 59, 999);
       days.push({
         start: dStart,
         end: dEnd,
-        label: dStart.toLocaleDateString('en-US', { weekday: 'short' }),
+        label: dStart.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }),
         calories: 0,
         workoutMinutes: 0
       });
@@ -105,18 +117,18 @@ router.get('/', authMiddleware, async (req, res) => {
     let currentStreak = 0;
     const dateHasWorkout = (d) => {
       const start = new Date(d);
-      start.setHours(0, 0, 0, 0);
+      start.setUTCHours(0, 0, 0, 0);
       const end = new Date(d);
-      end.setHours(23, 59, 59, 999);
+      end.setUTCHours(23, 59, 59, 999);
       return allWorkouts.some(w => {
         const wDate = new Date(w.date);
         return wDate >= start && wDate <= end;
       });
     };
 
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    const today = new Date(startOfToday);
+    const yesterday = new Date(startOfToday);
+    yesterday.setUTCDate(yesterday.getUTCDate() - 1);
 
     let startStreakDate = today;
     if (!dateHasWorkout(today)) {
@@ -132,7 +144,7 @@ router.get('/', authMiddleware, async (req, res) => {
       while (true) {
         if (dateHasWorkout(d)) {
           currentStreak++;
-          d.setDate(d.getDate() - 1);
+          d.setUTCDate(d.getUTCDate() - 1);
         } else {
           break;
         }

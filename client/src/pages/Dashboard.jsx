@@ -28,11 +28,20 @@ export default function Dashboard() {
 
   const { user } = useAuth();
 
+  const getTodayDateString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/dashboard');
+      const dateStr = getTodayDateString();
+      const response = await api.get(`/dashboard?date=${dateStr}`);
       setDashboardData(response.data);
     } catch (err) {
       console.error('Error loading dashboard:', err);
