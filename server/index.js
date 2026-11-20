@@ -10,8 +10,23 @@ const mongoose = require('mongoose');
 const app = express();
 
 // Middleware
-//accepts only request coming from process.env.CLIENT_URL or vite default http://localhost:5173
-app.use(cors({ origin: [process.env.CLIENT_URL || 'http://localhost:5173'], credentials: true }));
+// Accepts requests from CLIENT_URL, local dev, or your Vercel deployment
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'https://fitai-health-tracker-i7k4.vercel.app'
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
+  credentials: true
+}));
 //builtin parse middlewares - parse incoming http requests with parsed JSON payloads
 app.use(express.json());
 

@@ -12,15 +12,13 @@
 
 ---
 
-## 🌐 Deployment Status
+## 🌐 Live Deployments
 
-Currently running locally. Follow the [Deployment Guide](#-deployment-guide-render--vercel) below to deploy your own live version on Render and Vercel.
-
-| Service | Environment | Status / URL |
+| Service | Environment | URL |
 | :--- | :--- | :--- |
-| **Frontend Application** | Localhost / Vercel | `http://localhost:5173` |
-| **Backend REST API** | Localhost / Render | `http://localhost:5000` |
-| **Database** | MongoDB Atlas | Connected |
+| **Frontend Application** | Vercel | [https://fitai-health-tracker-i7k4.vercel.app](https://fitai-health-tracker-i7k4.vercel.app) |
+| **Backend REST API** | Render | [https://fitai-backend-2kj5.onrender.com](https://fitai-backend-2kj5.onrender.com) |
+| **Database** | MongoDB Atlas | Cloud Hosted (M0 Tier) |
 
 ---
 
@@ -192,13 +190,13 @@ VITE_API_URL=http://localhost:5000/api
    - `MONGODB_URI`: Your MongoDB Atlas connection string.
    - `JWT_SECRET`: Your production JWT secret string.
    - `GEMINI_API_KEY`: Your Google Gemini API key.
-   - `CLIENT_URL`: The production URL of your Vercel frontend (e.g. `https://fitai-tracker.vercel.app`).
+   - `CLIENT_URL`: The production URL of your Vercel frontend (`https://fitai-health-tracker-i7k4.vercel.app`).
 
 ### 2. Frontend on Vercel
 1. Create a new project on Vercel connected to this repository.
 2. Set Root Directory to `client`.
 3. Add the environment variable:
-   - `VITE_API_URL`: Your Render backend service URL with `/api` path (e.g. `https://fitai-backend.onrender.com/api`).
+   - `VITE_API_URL`: Your Render backend service URL with `/api` path (`https://fitai-backend-2kj5.onrender.com/api`).
 4. Deploy!
 
 ---
